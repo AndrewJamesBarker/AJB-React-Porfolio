@@ -3,6 +3,9 @@ import {useState, useEffect} from "react";
 
 export default function  SocialBar() {
 
+
+    // social media component //
+    
 return (
 
 <div>

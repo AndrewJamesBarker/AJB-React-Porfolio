@@ -13,6 +13,8 @@ export default function  EmploymentList() {
    getEmployment();
   }, []);
 
+// employment section of site //
+
   return (
     <div>
       <SocialBar />

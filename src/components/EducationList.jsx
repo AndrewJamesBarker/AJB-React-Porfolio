@@ -13,6 +13,8 @@ export default function  EducationList() {
    getEducation();
   }, []);
 
+// eduction section of site //
+
   return (
     <div>
       <SocialBar />

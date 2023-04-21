@@ -15,7 +15,9 @@ useEffect(() => {
     getProject();
 }, []);
 
-console.log({});
+// console.log({});
+
+// main projects section of site //
 
 return (
 

@@ -276,6 +276,7 @@ h4 {
   background-color: #354F52;
 }
 
+
 #skillDescription p {
   position: absolute;
   bottom: 80px;
@@ -292,6 +293,34 @@ h4 {
   padding: 12px;
   letter-spacing: .07em;
 }
+
+/* hover text display via w3 https://www.w3schools.com/css/css_tooltip.asp#:~:text=HTML%3A%20Use%20a%20container%20element,with%20class%3D%22tooltiptext%22%20. */
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 
 #portraitImg {
   width: calc(70vw + 30px);

@@ -50,7 +50,7 @@ return (
             {item.skills.map(skill => (
                 <div key={skill.id} className="inline-style">
                     <div>
-                        <p id="skill-name"><img className="logo-style" src={`http://cms.barksbytesdev.com/storage/${skill.logo}`} alt={skill.name}/> </p>
+                        <p id="skill-name"><img className="logo-style" src={`http://cms.barksbytesdev.com/storage/${skill.logo}`} title={skill.name} alt={skill.name}/></p>
                     </div>
                 </div>
         ))}

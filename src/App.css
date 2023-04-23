@@ -266,6 +266,31 @@ h4 {
   padding: .2em .7em;
 }
 
+/* #skill-name:not(img) {
+  opacity: 0;
+}
+
+#skill-name img {
+  opacity: 1;
+} */
+
+#skill-name {
+  position: relative;
+}
+#skill-name:hover:after {
+  content: attr(data-title);
+  background: #fff;
+  color: black;
+  font-size: .8em;
+  padding: 5px 12px;
+  border: solid 1px #ddd;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 #bigPortrait {
   margin-left: auto;
   margin-right: auto;
@@ -276,6 +301,9 @@ h4 {
   background-color: #354F52;
 }
 
+#skill-name {
+  cursor: pointer;
+}
 
 #skillDescription p {
   position: absolute;

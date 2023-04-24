@@ -1,6 +1,10 @@
 // import { escape } from "querystring";
 import {useState, useEffect} from "react";
 import SocialBar from "./SocialBar";
+import CarouselSlider from "./CarouselSlider";
+
+
+
 export default function  MainBody() {
 
 const [projects, setProject] = useState([]);
@@ -36,26 +40,10 @@ return (
         </div>
 
         {/* <!-- Portfolio Items --> */}
-
-       
+        
         <div className="basic-container">
-        {projects.map(item => (
-            <div key={item.id}>
-            <div className="basic-item">
-                <h2>{item.title}</h2>
-                <img className="projectImg" src={item.image}></img>
-                <p><a href={item.url}>{item.title}</a></p>
-                <p>{item.content}</p>
-            </div>
-            {item.skills.map(skill => (
-                <div key={skill.id} className="inline-style">
-                    <div>
-                        <p id="skill-name" data-title={skill.name}><img className="logo-style" src={`http://cms.barksbytesdev.com/storage/${skill.logo}`}   alt={skill.name}/></p>
-                    </div>
-                </div>
-        ))}
-            </div>
-    ))}
+        <CarouselSlider />
+    
         </div>
         <div id="goodbye">
         <h2 >Thanks for visiting! Reach out to me on Linkedin</h2>

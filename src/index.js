@@ -4,4 +4,3 @@
 //   document.getElementById('skill-name').title = skill.name;
 // });
 
-

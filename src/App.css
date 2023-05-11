@@ -42,11 +42,24 @@ html, body {
   position: relative;
   max-width: 90%;
 }
+
+/* logo spin */
+
 #logoAJB {
   padding-top: 4.1em;
   margin: 0;
+  animation: spin 1s linear forwards;
+  transform-origin: center;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
 .nav-link {
   padding: 1em;
 }
@@ -260,6 +273,11 @@ h4 {
 /* images stuff */
 
 
+.projectImage {
+  border: none;
+  border-radius: 12px;
+}
+
 .logo-style {
   width: 30px;
   height: 30px;
@@ -451,9 +469,10 @@ h4 {
     gap: 8px;
       }
 
-.projectImg {
+.projectImage {
   width: 100%;
 }
+
 
 #logoAJB {
   position: absolute;
@@ -550,8 +569,16 @@ h3 {
 
 @media screen and (max-width: 690px) {
 
+  #logoAJB {
+   text-align: center;
+    width: 42.5px;
+    height: 70px;
+  }
 
-
+  #media-menu li > a > img {
+    width: 20px;
+    padding: .4em;
+  }
 
   nav {
     position: absolute;

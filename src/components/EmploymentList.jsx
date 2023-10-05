@@ -6,13 +6,18 @@ export default function  EmploymentList() {
 
   useEffect(() => {
     const getEmployment = async () => {
-      fetch('https://cms.barksbytesdev.com/api/employment')
-      .then(res => res.json())
-      .then(data => setEmployment(data));
+      try {
+        const res = await fetch('https://cms.barksbytesdev.com/api/employment');
+        const data = await res.json();
+        // handle sorting and setting data here...
+      } catch (error) {
+        console.error("Failed to fetch data: ", error);
+        // handle error in UI, maybe set an error state
+      }
     }
-   getEmployment();
+    getEmployment();
   }, []);
-
+  
 // employment section of site //
 
   return (

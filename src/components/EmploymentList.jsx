@@ -1,24 +1,25 @@
 import {useState, useEffect} from "react";
 import SocialBar from "./SocialBar";
 
-export default function  EmploymentList() {
+export default function EmploymentList() {
   const [employment, setEmployment] = useState([]);
 
   useEffect(() => {
     const getEmployment = async () => {
       fetch('https://cms.barksbytesdev.com/api/employment')
       .then(res => res.json())
-      .then(data => setEmployment(data));
+      .then(data => {
+        const sortedData = data.sort((a, b) => new Date(b.started_at) - new Date(a.started_at));
+        setEmployment(sortedData);
+      });
     }
-   getEmployment();
+    getEmployment();
   }, []);
-
-// employment section of site //
 
   return (
     <div>
       <SocialBar />
-       <main className="widthControl" id="mainSidePages">
+      <main className="widthControl" id="mainSidePages">
         <div className="basic-container">
         {employment.map(item => (
           <div className="basic-item" key={item.id}>
@@ -26,13 +27,10 @@ export default function  EmploymentList() {
             <p>From: {item.started_at} To: {item.ended_at}</p>
             <p><a href={item.url}>{item.employer}</a></p>
             <p>{item.content}</p>
-            
           </div>
         ))}
         </div>
-       </main>
-
+      </main>
     </div>
   );
 };
-

@@ -58,7 +58,7 @@ return (
         </div>
         <div id="goodbye">
         <h2 >Thanks for visiting! Reach out to me on Linkedin</h2>
-        <a href="https://www.linkedin.com/in/andrew-james-barker-/" target="_blank"><img src="images/LinkedIn.png" width="31" alt="Linked logo characters i n"></img></a>
+        <a href="https://www.linkedin.com/in/andrew-james-barker/" target="_blank"><img src="images/LinkedIn.png" width="31" alt="Linked logo characters i n"></img></a>
       </div>
     </main>
 

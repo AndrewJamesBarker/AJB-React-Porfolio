@@ -8,14 +8,10 @@ export default function  EmploymentList() {
     const getEmployment = async () => {
       fetch('https://cms.barksbytesdev.com/api/employment')
       .then(res => res.json())
-      .then(data => {
-        const sortedData = data.sort((a, b) => new Date(b.started_at) - new Date(a.started_at));
-        setEmployment(sortedData);
-      });
+      .then(data => setEmployment(data));
     }
-    getEmployment();
+   getEmployment();
   }, []);
-  
 
 // employment section of site //
 

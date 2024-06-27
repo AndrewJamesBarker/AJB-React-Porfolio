@@ -30,7 +30,7 @@ return (
         
         <div id="heroText">
             <p>Hello there! I'm</p><h2>Andrew Barker.</h2>
-            <p>I’m a Mid-Level Full-Stack Web Developer. My portfolio is growing, and I’m always looking for new things to build, and learn.</p>
+            <p>I’m a Full-Stack Web Developer. My portfolio is growing, and I always look for new things to build and learn.</p>
             <p>I love clean, intuitive designs and strive to create seamless interactive experiences.</p>
         </div>
 

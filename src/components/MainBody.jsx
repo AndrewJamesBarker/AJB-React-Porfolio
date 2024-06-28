@@ -42,7 +42,7 @@ return (
             <div key={item.id}>
             <div className="basic-item">
                 <h2>{item.title}</h2>
-                <img  src={item.image} className="projectImage"></img>
+                <img  src={item.image} className="projectImage" alt="Screenshot of the application"></img>
                 <p><a target="_blank" href={item.url}>{item.title}</a></p>
                 <p>{item.content}</p>
             </div>

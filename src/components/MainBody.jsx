@@ -22,7 +22,8 @@ useEffect(() => {
 return (
 
 <div>
-<SocialBar />
+    <h1 className="sr-only">Andrew Barker - Full-Stack Developer</h1>
+    <SocialBar />
 
     {/* Main Hero */}
 

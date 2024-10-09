@@ -9,23 +9,22 @@ export default function MainBody() {
       fetch("https://cms.barksbytesdev.com/api/projects")
         .then((res) => res.json())
         .then((data) => {
-          // Reorder the projects in descending order based on title
-          const reorderedProjects = reorderProjectsByTitleDesc(data);
+          // Reorder the projects before setting state
+          const reorderedProjects = reorderProjects(data);
           setProjects(reorderedProjects);
         });
     };
     getProjects();
   }, []);
 
-  // Function to reorder projects in descending order based on title
-  const reorderProjectsByTitleDesc = (projects) => {
+  // Function to reorder projects (example: moving 'Password Generator' higher up)
+  const reorderProjects = (projects) => {
+    const targetProject = "Password Generator";
+    
     return projects.sort((a, b) => {
-      const titleA = a.title.toUpperCase(); // Ignore case
-      const titleB = b.title.toUpperCase(); // Ignore case
-
-      if (titleA < titleB) return 1;  // Swap to achieve descending order
-      if (titleA > titleB) return -1; // Swap to achieve descending order
-      return 0;  // Equal titles remain in the same position
+      if (a.title === targetProject) return -1; // Move 'Password Generator' up
+      if (b.title === targetProject) return 1;
+      return 0; // Keep others in their original order
     });
   };
 

@@ -39,12 +39,15 @@ html, body {
 }
 
 
-
 .widthControl {
   max-width: 80%;
   margin-left: auto;
   margin-right: auto;
-  
+}
+
+.margin-reset {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 /* Nav stuff */

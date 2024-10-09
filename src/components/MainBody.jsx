@@ -9,22 +9,34 @@ export default function MainBody() {
       fetch("https://cms.barksbytesdev.com/api/projects")
         .then((res) => res.json())
         .then((data) => {
-          // Reorder the projects before setting state
-          const reorderedProjects = reorderProjects(data);
+          // Reorder the projects based on the custom order
+          const reorderedProjects = reorderProjectsCustom(data);
           setProjects(reorderedProjects);
         });
     };
     getProjects();
   }, []);
 
-  // Function to reorder projects (example: moving 'Password Generator' higher up)
-  const reorderProjects = (projects) => {
-    const targetProject = "Password Generator";
-    
+  // Function to reorder projects in a specific custom order
+  const reorderProjectsCustom = (projects) => {
+    const customOrder = [
+      "WisDM",
+      "Portfolio CMS",
+      "Password Generator",
+      "MuseLab",
+      "White Witch",
+      "Castle Seige"
+    ];
+
     return projects.sort((a, b) => {
-      if (a.title === targetProject) return -1; // Move 'Password Generator' up
-      if (b.title === targetProject) return 1;
-      return 0; // Keep others in their original order
+      const indexA = customOrder.indexOf(a.title);
+      const indexB = customOrder.indexOf(b.title);
+
+      // If a project is not found in the custom order, leave it at the end
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+
+      return indexA - indexB; // Sort according to the custom order
     });
   };
 

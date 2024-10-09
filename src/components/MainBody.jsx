@@ -1,76 +1,111 @@
-// import { escape } from "querystring";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import SocialBar from "./SocialBar";
-export default function  MainBody() {
 
-const [projects, setProject] = useState([]);
+export default function MainBody() {
+  const [projects, setProjects] = useState([]);
 
-useEffect(() => {
-    const getProject = async () => {
-    fetch('https://cms.barksbytesdev.com/api/projects')
-    .then(res => res.json())
-    .then(data => setProject(data));
-    }
-    getProject();
-}, []);
+  useEffect(() => {
+    const getProjects = async () => {
+      fetch("https://cms.barksbytesdev.com/api/projects")
+        .then((res) => res.json())
+        .then((data) => {
+          // Reorder the projects in descending order based on title
+          const reorderedProjects = reorderProjectsByTitleDesc(data);
+          setProjects(reorderedProjects);
+        });
+    };
+    getProjects();
+  }, []);
 
-// console.log({});
+  // Function to reorder projects in descending order based on title
+  const reorderProjectsByTitleDesc = (projects) => {
+    return projects.sort((a, b) => {
+      const titleA = a.title.toUpperCase(); // Ignore case
+      const titleB = b.title.toUpperCase(); // Ignore case
 
-// main projects section of site //
+      if (titleA < titleB) return 1;  // Swap to achieve descending order
+      if (titleA > titleB) return -1; // Swap to achieve descending order
+      return 0;  // Equal titles remain in the same position
+    });
+  };
 
+  return (
+    <div>
+      <h1 className="sr-only">Andrew Barker - Full-Stack Developer</h1>
+      <SocialBar />
 
-return (
-
-<div>
-    <h1 className="sr-only">Andrew Barker - Full-Stack Developer</h1>
-    <SocialBar />
-
-    {/* Main Hero */}
-
-    <main className="widthControl" id="main">
-        
+      <main className="widthControl" id="main">
         <div id="heroText">
-            <p>Hello there! I'm</p><h2>Andrew Barker.</h2>
-            <p>I’m a Full-Stack Web Developer. My portfolio is growing, and I always look for new things to build and learn.</p>
-            <p>I love clean, intuitive designs and strive to create seamless interactive experiences.</p>
+          <p>Hello there! I'm</p>
+          <h2>Andrew Barker.</h2>
+          <p>
+            I’m a Full-Stack Web Developer. My portfolio is growing, and I
+            always look for new things to build and learn.
+          </p>
+          <p>
+            I love clean, intuitive designs and strive to create seamless
+            interactive experiences.
+          </p>
         </div>
 
         {/* <!-- Portfolio Items --> */}
-
-       
         <div className="basic-container">
-        {projects.map(item => (
+          {projects.map((item) => (
             <div key={item.id}>
-            <div className="basic-item">
+              <div className="basic-item">
                 <h2>{item.title}</h2>
-                <img  src={item.image} className="projectImage" alt="Screenshot of the application"></img>
-                <p><a target="_blank" href={item.url}>{item.title}</a></p>
+                <img
+                  src={item.image}
+                  className="projectImage"
+                  alt="Screenshot of the application"
+                />
+                <p>
+                  <a target="_blank" href={item.url}>
+                    {item.title}
+                  </a>
+                </p>
                 <p>{item.content}</p>
-            </div>
-            {item.skills.map(skill => (
+              </div>
+              {item.skills.map((skill) => (
                 <div key={skill.id} className="inline-style">
-                    <div>
-                        <p id="skill-name" data-title={skill.name}><img className="logo-style" src={`http://cms.barksbytesdev.com/storage/${skill.logo}`}   alt={skill.name}/></p>
-                    </div>
+                  <div>
+                    <p id="skill-name" data-title={skill.name}>
+                      <img
+                        className="logo-style"
+                        src={`http://cms.barksbytesdev.com/storage/${skill.logo}`}
+                        alt={skill.name}
+                      />
+                    </p>
+                  </div>
                 </div>
-        ))}
+              ))}
             </div>
-    ))}
+          ))}
         </div>
         <div id="goodbye">
-        <h2 >Thanks for visiting! Reach out to me on Linkedin</h2>
-        <a href="https://www.linkedin.com/in/andrew-james-barker/" target="_blank"><img src="images/LinkedIn.png" width="31" alt="Linked in logo characters"></img></a>
-      </div>
-    </main>
-
-    <div id="bigPortrait">
-        <img id="portraitImg" src="images/MePhotoSarahC.jpg" width="965" alt="side view photograph of man (Andrew) with a brick background"></img>
-        <div id="skillDescription">
+          <h2>Thanks for visiting! Reach out to me on Linkedin</h2>
+          <a
+            href="https://www.linkedin.com/in/andrew-james-barker/"
+            target="_blank"
+          >
+            <img
+              src="images/LinkedIn.png"
+              width="31"
+              alt="Linked in logo characters"
+            />
+          </a>
         </div>
+      </main>
+
+      <div id="bigPortrait">
+        <img
+          id="portraitImg"
+          src="images/MePhotoSarahC.jpg"
+          width="965"
+          alt="side view photograph of man (Andrew) with a brick background"
+        />
+        <div id="skillDescription"></div>
+      </div>
     </div>
-
-</div>
-
-);
-
+  );
 }

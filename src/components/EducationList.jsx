@@ -23,8 +23,8 @@ export default function  EducationList() {
         {education.map(item => (
           <div className="basic-item" key={item.id}>
             <h2>{item.title}</h2>
-            <p><a href={item.url}>{item.content}</a></p>
             <p>{item.graduated_at}</p>
+            <p><a href={item.url}>{item.content}</a></p>
           </div>
         ))}
         </div>

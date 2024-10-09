@@ -45,9 +45,8 @@ html, body {
   margin-right: auto;
 }
 
-.margin-reset {
-  margin-left: 0;
-  margin-right: 0;
+.textLeft {
+  text-align: start;
 }
 
 /* Nav stuff */

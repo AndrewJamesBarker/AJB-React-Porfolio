@@ -26,7 +26,7 @@ export default function  EmploymentList() {
             <h2>{item.title}</h2>
             <p>From: {item.started_at} To: {item.ended_at}</p>
             <p><a href={item.url}>{item.employer}</a></p>
-            <p className="margin-reset">{item.content}</p>
+            <p className="textLeft">{item.content}</p>
             
           </div>
         ))}

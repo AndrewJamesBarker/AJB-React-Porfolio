@@ -21,8 +21,8 @@ export default function MainBody() {
   const reorderProjectsCustom = (projects) => {
     const customOrder = [
       "White Witch",
-      "Multi-Media",
       "WisDM",
+      "Multi-Media",
       "Password Generator",
       "MuseLab",
       "Portfolio CMS",

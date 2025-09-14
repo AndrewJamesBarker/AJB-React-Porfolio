@@ -20,8 +20,8 @@ export default function MainBody() {
   // Function to reorder projects in a specific custom order
   const reorderProjectsCustom = (projects) => {
     const customOrder = [
-      "White Witch",
       "WisDM",
+      "White Witch",
       "Multi-Media",
       "Password Generator",
       "MuseLab",

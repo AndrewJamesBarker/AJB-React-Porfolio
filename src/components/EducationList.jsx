@@ -24,6 +24,7 @@ export default function  EducationList() {
           <div className="basic-item" key={item.id}>
             <h2>{item.title}</h2>
             <p>{item.graduated_at}</p>
+            <p>GPA: 3.9</p>
             <p><a href={item.url}>{item.content}</a></p>
           </div>
         ))}

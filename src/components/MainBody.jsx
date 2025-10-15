@@ -76,7 +76,7 @@ export default function MainBody() {
                     {item.title}
                   </a>
                 </p>
-                <p>{item.content}</p>
+                <p className="project-content">{item.content}</p>
               </div>
               {item.skills.map((skill) => (
                 <div key={skill.id} className="inline-style">

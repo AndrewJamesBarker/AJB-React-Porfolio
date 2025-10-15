@@ -444,6 +444,8 @@ h4 {
   padding: 6em 0 ;
 }
 
+/* Portfolio content inherits center alignment from .basic-container */
+
 .basic-item {
   padding: 2.5em;
 }
@@ -702,6 +704,153 @@ nav ul li {
   padding-top: 0;
 }
 
+/* ===== Responsive overrides appended ===== */
+/* Base: make header flex-driven and menu inline-flex */
+#header { display:flex; align-items:center; justify-content:space-between; gap: 16px; }
+#header #logoAJB { padding-top: 0; }
+#main-menu { position: static; }
+#main-menu .menu { display:flex; gap: clamp(12px, 3vw, 32px); align-items:center; }
+#main-menu .menu a { display:inline-block; padding: .5em 0; }
 
+/* Left-align all content text on all screen sizes */
+#heroText { text-align: left; }
+.basic-item h2 { text-align: center; }
+.basic-item p { text-align: left; }
+.basic-item p a { text-align: center; display: block; }
+
+/* Ensure portfolio content is left-aligned on all screen sizes */
+.basic-container .basic-item p { text-align: left; }
+
+/* Tablet: keep same alignment as desktop (logo left, nav right) */
+@media (max-width: 990px) and (min-width: 769px) {
+  #header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  #logoAJB { width: 80px; height: 120px; position: static; margin: 0; }
+  nav { position: static; padding: 0; font-size: 1.1em; }
+  #main-menu { position: static; right: auto; }
+  #main-menu .menu { justify-content: flex-end; }
+}
+
+/* Mobile: hide logo, center nav, optimize social bar */
+@media (max-width: 768px) {
+  #header { justify-content: center; gap: 0; padding-top: 2em; }
+  #logoAJB { display: none; }
+  nav { position: static; padding: 0; font-size: 1em; text-align: center; }
+  #main-menu { position: static; right: auto; }
+  #main-menu .menu { justify-content: center; gap: 2em; }
+
+  /* Position social bar directly below nav, centered */
+  .relativeContainer { 
+    position: static; 
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  #media-menu { 
+    position: static; 
+    top: auto; 
+    right: auto; 
+    margin: 0; 
+    padding: 1em 0; 
+    text-align: center;
+    width: auto;
+  }
+  .mediaLogos { 
+    justify-content: center; 
+    gap: 1.5em; 
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Adjust hero text margin for no logo */
+  #heroText { margin-top: 80px; }
+  
+  /* Make portfolio titles smaller on mobile */
+  .basic-item h2 { font-size: 1.4em; }
+}
+
+/* Small phones: further optimize spacing */
+@media (max-width: 480px) {
+  #header { padding-top: 1.5em; }
+  #main-menu .menu { gap: 1.5em; font-size: 0.9em; }
+  .relativeContainer { 
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  #media-menu { 
+    padding: 0.5em 0; 
+    margin: 0;
+    width: auto;
+  }
+  .mediaLogos { 
+    gap: 1em; 
+    justify-content: center;
+    display: flex;
+  }
+  #heroText { margin-top: 60px; }
+  .basic-item { padding: 1.5em 1em; }
+  .basic-item h2 { font-size: 1.2em; }
+}
+
+/* Side pages styling improvements */
+#mainSidePages .basic-item h2 { 
+  text-align: center; 
+  margin-bottom: 0.5em;
+}
+
+#mainSidePages .basic-item p { 
+  text-align: left; 
+  margin-bottom: 0.8em;
+}
+
+#mainSidePages .basic-item p:first-of-type { 
+  font-weight: 500; 
+  color: #2F3E46;
+  text-align: center;
+}
+
+#mainSidePages .basic-item a { 
+  color: #DC2F02; 
+  text-decoration: none;
+}
+
+#mainSidePages .basic-item a:hover { 
+  text-decoration: underline; 
+}
+
+/* Fix goodbye section alignment */
+#goodbye {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  text-align: center;
+  padding-top: 2em;
+}
+
+@media (max-width: 768px) {
+  #goodbye {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+  }
+  
+  #goodbye h2 {
+    font-size: 1.4em;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  #goodbye {
+    flex-direction: column;
+    gap: 0.5em;
+  }
+  
+  #goodbye h2 {
+    font-size: 1.2em;
+  }
 }
 

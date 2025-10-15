@@ -235,6 +235,13 @@ footer p {
   max-width: 557px ;
 }
 
+/* Override hero text margin on mobile */
+@media (max-width: 768px) {
+  #heroText {
+    margin-top: 0 !important;
+  }
+}
+
 .bolded {
   font-weight: 500;
   font-size: 1.2em;
@@ -732,11 +739,11 @@ nav ul li {
 
 /* Mobile: hide logo, center nav, optimize social bar */
 @media (max-width: 768px) {
-  #header { justify-content: center; gap: 0; padding-top: 2em; }
+  #header { justify-content: center; gap: 0; padding-top: 0.2em; padding-bottom: 0.7em; }
   #logoAJB { display: none; }
-  nav { position: static; padding: 0; font-size: 1em; text-align: center; }
-  #main-menu { position: static; right: auto; }
-  #main-menu .menu { justify-content: center; gap: 2em; }
+  nav { position: static; padding: 0; margin: 0; font-size: 1em; text-align: center; }
+  #main-menu { position: static; right: auto; margin: 0; padding: 0; }
+  #main-menu .menu { justify-content: center; gap: 2em; margin: 0; padding: 0 0 0.5em 0; }
 
   /* Position social bar directly below nav, centered */
   .relativeContainer { 
@@ -750,7 +757,7 @@ nav ul li {
     top: auto; 
     right: auto; 
     margin: 0; 
-    padding: 1em 0; 
+    padding: 0; 
     text-align: center;
     width: auto;
   }
@@ -763,23 +770,29 @@ nav ul li {
   }
   
   /* Adjust hero text margin for no logo */
-  #heroText { margin-top: 80px; }
+  #heroText { margin-top: 0; }
   
   /* Make portfolio titles smaller on mobile */
   .basic-item h2 { font-size: 1.4em; }
+  
+  /* Apply same tight spacing to side pages */
+  #mainSidePages { margin-top: 0; }
+  
+  /* Reduce basic-container padding on mobile */
+  .basic-container { padding: 1em 0; }
 }
 
 /* Small phones: further optimize spacing */
 @media (max-width: 480px) {
-  #header { padding-top: 1.5em; }
-  #main-menu .menu { gap: 1.5em; font-size: 0.9em; }
+  #header { padding-top: 0.1em; padding-bottom: 0.5em; }
+  #main-menu .menu { gap: 1.5em; font-size: 0.9em; margin: 0; padding: 0 0 0.4em 0; }
   .relativeContainer { 
     display: flex;
     justify-content: center;
     width: 100%;
   }
   #media-menu { 
-    padding: 0.5em 0; 
+    padding: 0; 
     margin: 0;
     width: auto;
   }
@@ -788,9 +801,15 @@ nav ul li {
     justify-content: center;
     display: flex;
   }
-  #heroText { margin-top: 60px; }
+  #heroText { margin-top: 0; }
   .basic-item { padding: 1.5em 1em; }
   .basic-item h2 { font-size: 1.2em; }
+  
+  /* Apply same tight spacing to side pages */
+  #mainSidePages { margin-top: 0; }
+  
+  /* Reduce basic-container padding on small phones */
+  .basic-container { padding: 0.5em 0; }
 }
 
 /* Side pages styling improvements */
@@ -810,6 +829,12 @@ nav ul li {
   text-align: center;
 }
 
+#mainSidePages .basic-item .gpa-text { 
+  text-align: center; 
+  font-weight: 500;
+  color: #2F3E46;
+}
+
 #mainSidePages .basic-item a { 
   color: #DC2F02; 
   text-decoration: none;
@@ -817,6 +842,13 @@ nav ul li {
 
 #mainSidePages .basic-item a:hover { 
   text-decoration: underline; 
+}
+
+/* Restore original padding for side pages on desktop */
+@media (min-width: 769px) {
+  #mainSidePages .basic-container {
+    padding: 6em 0;
+  }
 }
 
 /* Fix goodbye section alignment */

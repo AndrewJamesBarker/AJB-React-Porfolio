@@ -8,7 +8,7 @@ export default function  SocialBar() {
     
 return (
 
-<div>
+<div className="socialBar">
     <div className="relativeContainer">
         <div className="widthControl" id="media-menu">
             {/* <button className="media-toggle">Social/Git</button> */}
@@ -20,7 +20,6 @@ return (
             </ul>
         </div>
     </div>
-
 </div>
 );
 }

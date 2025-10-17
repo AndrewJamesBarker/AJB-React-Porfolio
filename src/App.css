@@ -99,8 +99,17 @@ nav ul li {
   position: absolute;
   top: -2em;
   right: 0;
-
 }
+
+/* Make social bar sticky on large screens while preserving original positioning */
+@media (min-width: 991px) {
+  .socialBar {
+    position: sticky;
+    top: 3em;
+    z-index: 1000;
+  }
+}
+
 
 #main-menu {
   position:absolute;
@@ -497,13 +506,7 @@ h4 {
 }
 
 
-#logoAJB {
-  position: absolute;
-  top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
+
 
 #header {
   display: block;
@@ -514,14 +517,7 @@ h4 {
 
 @media screen and (max-width:767px) {
 
-  #logoAJB {
-    position: absolute;
-    top: 5%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  
+
   nav ul li {
     gap: .6em;
 
@@ -540,13 +536,6 @@ margin: 0 4px;
 gap: 8px;
   }
 
-#logoAJB {
-  position: absolute;
-  top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
   
 
 #bigPortrait {
@@ -626,13 +615,13 @@ h3 {
 
 
 
-#logoAJB {
+/* #logoAJB {
   position: absolute;
   top: 5%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-}
+} */
 
 h3 {
   margin-top: 20px;
@@ -693,13 +682,7 @@ nav ul li {
   max-width: 557px ;
 }
 
-#logoAJB {
-  position: absolute;
-  top: 35px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
+
 
 #heroText {
   margin-bottom: 0;
@@ -729,21 +712,36 @@ nav ul li {
 .basic-container .basic-item p { text-align: left; }
 
 /* Tablet: keep same alignment as desktop (logo left, nav right) */
-@media (max-width: 990px) and (min-width: 769px) {
+@media (max-width: 990px) and (min-width: 691px) {
   #header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  #logoAJB { width: 80px; height: 120px; position: static; margin: 0; }
+  #logoAJB { width: 80px; height: 120px; position: static; margin: 0; display: block; }
   nav { position: static; padding: 0; font-size: 1.1em; }
   #main-menu { position: static; right: auto; }
   #main-menu .menu { justify-content: flex-end; }
 }
 
-/* Mobile: hide logo, center nav, optimize social bar */
-@media (max-width: 768px) {
-  #header { justify-content: center; gap: 0; padding-top: 0.2em; padding-bottom: 0.7em; }
+/* Ensure logo stays visible and positioned correctly on desktop small screens */
+@media (min-width: 691px) {
+  #logoAJB { 
+    display: block !important; 
+    position: static !important; 
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+  #header { 
+    display: flex !important; 
+    align-items: center !important; 
+    justify-content: space-between !important; 
+  }
+}
+
+/* Mobile: maintain desktop layout but with tighter spacing */
+@media (max-width: 690px) {
+  #header { justify-content: center; gap: 8px; padding-top: 0.2em; padding-bottom: 0.7em; }
   #logoAJB { display: none; }
-  nav { position: static; padding: 0; margin: 0; font-size: 1em; text-align: center; }
+  nav { position: static; padding: 0; margin: 0; font-size: 0.9em; text-align: center; }
   #main-menu { position: static; right: auto; margin: 0; padding: 0; }
-  #main-menu .menu { justify-content: center; gap: 2em; margin: 0; padding: 0 0 0.5em 0; }
+  #main-menu .menu { justify-content: center; gap: 1.5em; margin: 0; padding: 0 0 0.5em 0; }
 
   /* Position social bar directly below nav, centered */
   .relativeContainer { 
@@ -757,7 +755,7 @@ nav ul li {
     top: auto; 
     right: auto; 
     margin: 0; 
-    padding: 0; 
+    padding: 0.2em 0; 
     text-align: center;
     width: auto;
   }
@@ -769,30 +767,31 @@ nav ul li {
     padding: 0;
   }
   
-  /* Adjust hero text margin for no logo */
-  #heroText { margin-top: 0; }
+  /* Adjust hero text margin */
+  #heroText { margin-top: 20px; }
   
-  /* Make portfolio titles smaller on mobile */
+  /* Make portfolio titles smaller on small screens */
   .basic-item h2 { font-size: 1.4em; }
   
   /* Apply same tight spacing to side pages */
-  #mainSidePages { margin-top: 0; }
+  #mainSidePages { margin-top: 20px; }
   
-  /* Reduce basic-container padding on mobile */
-  .basic-container { padding: 1em 0; }
+  /* Reduce basic-container padding on small screens */
+  .basic-container { padding: 2em 0; }
 }
 
-/* Small phones: further optimize spacing */
+/* Small phones: maintain desktop layout with even tighter spacing */
 @media (max-width: 480px) {
-  #header { padding-top: 0.1em; padding-bottom: 0.5em; }
-  #main-menu .menu { gap: 1.5em; font-size: 0.9em; margin: 0; padding: 0 0 0.4em 0; }
+  #header { padding-top: 0.1em; padding-bottom: 0.5em; gap: 4px; justify-content: center; }
+  #logoAJB { display: none; }
+  #main-menu .menu { gap: 1em; font-size: 0.8em; margin: 0; padding: 0 0 0.4em 0; justify-content: center; }
   .relativeContainer { 
     display: flex;
     justify-content: center;
     width: 100%;
   }
   #media-menu { 
-    padding: 0; 
+    padding: 0.1em 0; 
     margin: 0;
     width: auto;
   }
@@ -801,15 +800,15 @@ nav ul li {
     justify-content: center;
     display: flex;
   }
-  #heroText { margin-top: 0; }
+  #heroText { margin-top: 15px; }
   .basic-item { padding: 1.5em 1em; }
   .basic-item h2 { font-size: 1.2em; }
   
   /* Apply same tight spacing to side pages */
-  #mainSidePages { margin-top: 0; }
+  #mainSidePages { margin-top: 15px; }
   
   /* Reduce basic-container padding on small phones */
-  .basic-container { padding: 0.5em 0; }
+  .basic-container { padding: 1em 0; }
 }
 
 /* Side pages styling improvements */
@@ -845,11 +844,13 @@ nav ul li {
 }
 
 /* Restore original padding for side pages on desktop */
-@media (min-width: 769px) {
+@media (min-width: 691px) {
   #mainSidePages .basic-container {
     padding: 6em 0;
   }
 }
+
+
 
 /* Fix goodbye section alignment */
 #goodbye {

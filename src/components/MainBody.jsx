@@ -7,10 +7,7 @@ export default function MainBody() {
   useEffect(() => {
     const getProjects = async () => {
       try {
-        const resp = await fetch(
-          "https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills.field_logo,uid",
-          { headers: { Accept: "application/vnd.api+json" } }
-        );
+        const resp = await fetch('/.netlify/functions/projects');
         const json = await resp.json();
         const mapped = mapDrupalResponse(json.data || [], json.included || []);
         const reorderedProjects = reorderProjectsCustom(mapped);

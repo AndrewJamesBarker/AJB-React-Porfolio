@@ -8,7 +8,7 @@ export default function MainBody() {
     const getProjects = async () => {
       try {
         const resp = await fetch(
-          "https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image,field_skills,uid",
+          "https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills.field_logo,uid",
           { headers: { Accept: "application/vnd.api+json" } }
         );
         const json = await resp.json();
@@ -56,28 +56,38 @@ export default function MainBody() {
       const attrs = item.attributes || {};
       const rel = item.relationships || {};
 
-      // Resolve image
+      // Resolve image: prefer media -> file relationship
       let imageUrl = null;
       const imageRelId = rel.field_project_image?.data?.id;
       const imageIncluded = imageRelId && includedById[imageRelId];
       if (imageIncluded) {
-        // Possible locations for media/file URL
+        const fileRelId = imageIncluded.relationships?.field_media_image?.data?.id;
+        const fileIncluded = fileRelId && includedById[fileRelId];
         imageUrl =
+          fileIncluded?.attributes?.uri?.url ||
+          fileIncluded?.attributes?.uri?.value ||
           imageIncluded.attributes?.field_media_image?.uri?.url ||
           imageIncluded.attributes?.uri?.url ||
-          imageIncluded.attributes?.image?.uri?.url ||
-          imageIncluded.attributes?.uri ||
           null;
       }
 
-      // Resolve skills
+      // Resolve skills: taxonomy terms may include a field_logo media/file
       const skills = (rel.field_skills?.data || []).map((s) => {
         const inc = includedById[s.id] || {};
+        let logo = null;
+        const logoMediaId = inc.relationships?.field_logo?.data?.id;
+        const logoFile = logoMediaId && includedById[logoMediaId];
+        if (logoFile) {
+          logo = logoFile.attributes?.uri?.url || logoFile.attributes?.uri?.value || null;
+        } else {
+          // fallback to any direct attribute
+          logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || null;
+        }
+
         return {
           id: s.id || inc.id || Math.random().toString(36).slice(2, 9),
           name: inc.attributes?.name || inc.attributes?.title || s.meta?.drupal_internal__target_id || "",
-          logo:
-            inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || null
+          logo
         };
       });
 
@@ -133,11 +143,11 @@ export default function MainBody() {
                 <div key={skill.id} className="inline-style">
                   <div>
                     <p id="skill-name" data-title={skill.name}>
-                      {skill.logo ? (
+                      {typeof skill.logo === "string" && skill.logo ? (
                         <img
                           className="logo-style"
                           src={
-                            skill.logo.startsWith && skill.logo.startsWith("http")
+                            skill.logo.startsWith("http")
                               ? skill.logo
                               : `https://cms.andrewjbarker.com${skill.logo.startsWith("/") ? "" : "/"}${skill.logo}`
                           }

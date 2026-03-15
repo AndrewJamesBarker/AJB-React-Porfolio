@@ -5,17 +5,20 @@ const DRUPAL_API_URL = process.env.DRUPAL_API_URL ||
 // Map Drupal JSON:API response to app project shape
 function mapDrupalResponse(data = [], included = []) {
   const includedById = Object.fromEntries((included || []).map((i) => [i.id, i]));
+  const diagnostics = [];
 
-  return (data || []).map((item) => {
+  const projects = (data || []).map((item) => {
     const attrs = item.attributes || {};
     const rel = item.relationships || {};
+
+    const diag = { id: item.id, title: attrs.title || attrs.field_title || null, issues: [] };
 
     // Resolve image via media -> file
     let imageUrl = null;
     const imageRelId = rel.field_project_image?.data?.id;
     const imageIncluded = imageRelId && includedById[imageRelId];
     if (imageIncluded) {
-      const fileRelId = imageIncluded.relationships?.field_media_image?.data?.id;
+      const fileRelId = imageIncluded.relationships?.field_media_image?.data?.id || imageIncluded.relationships?.field_media_file?.data?.id;
       const fileIncluded = fileRelId && includedById[fileRelId];
       imageUrl =
         fileIncluded?.attributes?.uri?.url ||
@@ -23,6 +26,9 @@ function mapDrupalResponse(data = [], included = []) {
         imageIncluded.attributes?.field_media_image?.uri?.url ||
         imageIncluded.attributes?.uri?.url ||
         null;
+      if (!imageUrl) diag.issues.push('image_included_but_no_file_uri');
+    } else {
+      diag.issues.push('no_image_included');
     }
 
     // Resolve skills
@@ -30,23 +36,27 @@ function mapDrupalResponse(data = [], included = []) {
       const inc = includedById[s.id] || {};
       let logo = null;
       // Try a few possible relationship/field names that may hold the media
-      const possibleLogoRels = ['field_logo', 'field_skill_icon', 'field_skill_image', 'field_icon'];
+      const possibleLogoRels = ['field_skill_icon', 'field_logo', 'field_skill_image', 'field_icon'];
       let mediaIncluded = null;
+      let foundRel = null;
       for (const relName of possibleLogoRels) {
         const logoMediaId = inc.relationships?.[relName]?.data?.id;
         if (logoMediaId && includedById[logoMediaId]) {
           mediaIncluded = includedById[logoMediaId];
+          foundRel = relName;
           break;
         }
       }
       if (mediaIncluded) {
-        // Follow media -> file (field_media_image or field_media_image)
+        // Follow media -> file
         const fileRelId = mediaIncluded.relationships?.field_media_image?.data?.id || mediaIncluded.relationships?.field_media_file?.data?.id || mediaIncluded.relationships?.field_media_image?.data?.id;
         const fileIncluded = fileRelId && includedById[fileRelId];
         logo = fileIncluded?.attributes?.uri?.url || fileIncluded?.attributes?.uri?.value || mediaIncluded.attributes?.field_media_image?.uri?.url || mediaIncluded.attributes?.uri?.url || null;
+        if (!logo) diag.issues.push(`skill_${s.id}_media_no_file`);
       } else {
         // Fallback to any direct attribute that might contain a URI
         logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || inc.attributes?.field_skill_icon?.uri?.url || null;
+        if (!logo) diag.issues.push(`skill_${s.id}_no_media_found`);
       }
 
       return {
@@ -55,6 +65,8 @@ function mapDrupalResponse(data = [], included = []) {
         logo
       };
     });
+
+    diagnostics.push(diag);
 
     return {
       id: item.id || attrs.drupal_internal__nid || Math.random().toString(36).slice(2, 9),
@@ -65,6 +77,8 @@ function mapDrupalResponse(data = [], included = []) {
       skills
     };
   });
+
+  return { projects, diagnostics };
 }
 
 exports.handler = async (event) => {
@@ -80,7 +94,18 @@ exports.handler = async (event) => {
     }
 
     const json = await resp.json();
-    const projects = mapDrupalResponse(json.data || [], json.included || []);
+    const { projects, diagnostics } = mapDrupalResponse(json.data || [], json.included || []);
+
+    const debug = event?.queryStringParameters?.debug === '1';
+    if (debug) {
+      // include diagnostics and a lightweight included summary for debugging
+      const includedSummary = (json.included || []).map((i) => ({ id: i.id, type: i.type, relationships: Object.keys(i.relationships || {}), attrs: Object.keys(i.attributes || {}) }));
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projects, diagnostics, includedSummary })
+      };
+    }
 
     return {
       statusCode: 200,

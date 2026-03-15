@@ -1,6 +1,7 @@
 // Netlify Function: fetches Drupal JSON:API and returns a transformed project array
 const DRUPAL_API_URL = process.env.DRUPAL_API_URL ||
-  'https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills,uid';
+  'https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills.field_skill_icon.field_media_image,uid';
+const DRUPAL_HOST = 'https://cms.andrewjbarker.com';
 
 // Map Drupal JSON:API response to app project shape
 function mapDrupalResponse(data = [], included = []) {
@@ -31,6 +32,9 @@ function mapDrupalResponse(data = [], included = []) {
       diag.issues.push('no_image_included');
     }
 
+    // Normalize to absolute URL if needed
+    if (imageUrl && imageUrl.startsWith('/')) imageUrl = DRUPAL_HOST + imageUrl;
+
     // Resolve skills
     const skills = (rel.field_skills?.data || []).map((s) => {
       const inc = includedById[s.id] || {};
@@ -57,6 +61,11 @@ function mapDrupalResponse(data = [], included = []) {
         // Fallback to any direct attribute that might contain a URI
         logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || inc.attributes?.field_skill_icon?.uri?.url || null;
         if (!logo) diag.issues.push(`skill_${s.id}_no_media_found`);
+      }
+
+      // Normalize logo to absolute URL if relative
+      if (logo && typeof logo === 'string' && logo.startsWith('/')) {
+        logo = DRUPAL_HOST + logo;
       }
 
       return {

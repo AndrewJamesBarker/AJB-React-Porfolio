@@ -29,18 +29,21 @@ function mapDrupalResponse(data = [], included = []) {
     const skills = (rel.field_skills?.data || []).map((s) => {
       const inc = includedById[s.id] || {};
       let logo = null;
-      // Try a few possible relationship/field names that may hold the media/file
+      // Try a few possible relationship/field names that may hold the media
       const possibleLogoRels = ['field_logo', 'field_skill_icon', 'field_skill_image', 'field_icon'];
-      let logoFile = null;
+      let mediaIncluded = null;
       for (const relName of possibleLogoRels) {
         const logoMediaId = inc.relationships?.[relName]?.data?.id;
         if (logoMediaId && includedById[logoMediaId]) {
-          logoFile = includedById[logoMediaId];
+          mediaIncluded = includedById[logoMediaId];
           break;
         }
       }
-      if (logoFile) {
-        logo = logoFile.attributes?.uri?.url || logoFile.attributes?.uri?.value || null;
+      if (mediaIncluded) {
+        // Follow media -> file (field_media_image or field_media_image)
+        const fileRelId = mediaIncluded.relationships?.field_media_image?.data?.id || mediaIncluded.relationships?.field_media_file?.data?.id || mediaIncluded.relationships?.field_media_image?.data?.id;
+        const fileIncluded = fileRelId && includedById[fileRelId];
+        logo = fileIncluded?.attributes?.uri?.url || fileIncluded?.attributes?.uri?.value || mediaIncluded.attributes?.field_media_image?.uri?.url || mediaIncluded.attributes?.uri?.url || null;
       } else {
         // Fallback to any direct attribute that might contain a URI
         logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || inc.attributes?.field_skill_icon?.uri?.url || null;

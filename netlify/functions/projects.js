@@ -3,16 +3,23 @@ const DRUPAL_API_URL = process.env.DRUPAL_API_URL ||
   'https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills.field_skill_icon.field_media_image,uid';
 const DRUPAL_HOST = 'https://cms.andrewjbarker.com';
 
+function isAllowedUrl(u) {
+  if (!u || typeof u !== 'string') return false;
+  try {
+    const url = new URL(u, DRUPAL_HOST);
+    return url.origin === DRUPAL_HOST;
+  } catch (e) {
+    return false;
+  }
+}
+
 // Map Drupal JSON:API response to app project shape
 function mapDrupalResponse(data = [], included = []) {
   const includedById = Object.fromEntries((included || []).map((i) => [i.id, i]));
-  const diagnostics = [];
 
   const projects = (data || []).map((item) => {
     const attrs = item.attributes || {};
     const rel = item.relationships || {};
-
-    const diag = { id: item.id, title: attrs.title || attrs.field_title || null, issues: [] };
 
     // Resolve image via media -> file
     let imageUrl = null;
@@ -27,9 +34,6 @@ function mapDrupalResponse(data = [], included = []) {
         imageIncluded.attributes?.field_media_image?.uri?.url ||
         imageIncluded.attributes?.uri?.url ||
         null;
-      if (!imageUrl) diag.issues.push('image_included_but_no_file_uri');
-    } else {
-      diag.issues.push('no_image_included');
     }
 
     // Normalize to absolute URL if needed
@@ -56,11 +60,9 @@ function mapDrupalResponse(data = [], included = []) {
         const fileRelId = mediaIncluded.relationships?.field_media_image?.data?.id || mediaIncluded.relationships?.field_media_file?.data?.id || mediaIncluded.relationships?.field_media_image?.data?.id;
         const fileIncluded = fileRelId && includedById[fileRelId];
         logo = fileIncluded?.attributes?.uri?.url || fileIncluded?.attributes?.uri?.value || mediaIncluded.attributes?.field_media_image?.uri?.url || mediaIncluded.attributes?.uri?.url || null;
-        if (!logo) diag.issues.push(`skill_${s.id}_media_no_file`);
       } else {
         // Fallback to any direct attribute that might contain a URI
         logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || inc.attributes?.field_skill_icon?.uri?.url || null;
-        if (!logo) diag.issues.push(`skill_${s.id}_no_media_found`);
       }
 
       // Normalize logo to absolute URL if relative
@@ -75,8 +77,6 @@ function mapDrupalResponse(data = [], included = []) {
       };
     });
 
-    diagnostics.push(diag);
-
     return {
       id: item.id || attrs.drupal_internal__nid || Math.random().toString(36).slice(2, 9),
       title: attrs.title || attrs.field_title || "",
@@ -87,7 +87,7 @@ function mapDrupalResponse(data = [], included = []) {
     };
   });
 
-  return { projects, diagnostics };
+  return projects;
 }
 
 exports.handler = async (event) => {
@@ -103,23 +103,21 @@ exports.handler = async (event) => {
     }
 
     const json = await resp.json();
-    const { projects, diagnostics } = mapDrupalResponse(json.data || [], json.included || []);
+    const projects = mapDrupalResponse(json.data || [], json.included || []);
 
-    const debug = event?.queryStringParameters?.debug === '1';
-    if (debug) {
-      // include diagnostics and a lightweight included summary for debugging
-      const includedSummary = (json.included || []).map((i) => ({ id: i.id, type: i.type, relationships: Object.keys(i.relationships || {}), attrs: Object.keys(i.attributes || {}) }));
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projects, diagnostics, includedSummary })
-      };
-    }
+    const cacheHeaders = { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' };
+
+    // Sanitize output: ensure image/logo URLs are allowed
+    const safeProjects = projects.map((p) => ({
+      ...p,
+      image: isAllowedUrl(p.image) ? p.image : null,
+      skills: (p.skills || []).map((s) => ({ id: s.id, name: s.name, logo: isAllowedUrl(s.logo) ? s.logo : null }))
+    }));
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(projects)
+      headers: cacheHeaders,
+      body: JSON.stringify(safeProjects)
     };
   } catch (err) {
     return {

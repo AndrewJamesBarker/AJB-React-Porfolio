@@ -9,7 +9,20 @@ export default function MainBody() {
       try {
         const resp = await fetch('/.netlify/functions/projects');
         const json = await resp.json();
-        const mapped = mapDrupalResponse(json.data || [], json.included || []);
+
+        // The function returns a transformed project array. But keep compatibility
+        // with direct Drupal responses (data + included) if needed.
+        let mapped;
+        if (Array.isArray(json)) {
+          mapped = json;
+        } else if (json && Array.isArray(json.data)) {
+          mapped = mapDrupalResponse(json.data || [], json.included || []);
+        } else if (json && Array.isArray(json.projects)) {
+          mapped = json.projects;
+        } else {
+          mapped = [];
+        }
+
         const reorderedProjects = reorderProjectsCustom(mapped);
         setProjects(reorderedProjects);
       } catch (err) {

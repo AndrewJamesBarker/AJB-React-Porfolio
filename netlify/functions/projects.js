@@ -1,5 +1,4 @@
 // Netlify Function: fetches Drupal JSON:API and returns a transformed project array
-const fetch = require('node-fetch');
 const DRUPAL_API_URL = process.env.DRUPAL_API_URL ||
   'https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills.field_logo,uid';
 

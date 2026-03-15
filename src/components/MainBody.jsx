@@ -6,13 +6,20 @@ export default function MainBody() {
 
   useEffect(() => {
     const getProjects = async () => {
-      fetch("https://cms.barksbytesdev.com/api/projects")
-        .then((res) => res.json())
-        .then((data) => {
-          // Reorder the projects based on the custom order
-          const reorderedProjects = reorderProjectsCustom(data);
-          setProjects(reorderedProjects);
-        });
+      try {
+        const resp = await fetch(
+          "https://cms.andrewbarker.com/jsonapi/node/projects?include=field_project_image,field_skills,uid",
+          { headers: { Accept: "application/vnd.api+json" } }
+        );
+        const json = await resp.json();
+        const mapped = mapDrupalResponse(json.data || [], json.included || []);
+        const reorderedProjects = reorderProjectsCustom(mapped);
+        setProjects(reorderedProjects);
+      } catch (err) {
+        // fallback: keep projects empty and log the error
+        // eslint-disable-next-line no-console
+        console.error("Failed to fetch Drupal projects:", err);
+      }
     };
     getProjects();
   }, []);
@@ -38,6 +45,50 @@ export default function MainBody() {
       if (indexB === -1) return -1;
 
       return indexA - indexB; // Sort according to the custom order
+    });
+  };
+
+  // Map Drupal JSON:API response to the app's project shape
+  const mapDrupalResponse = (data = [], included = []) => {
+    const includedById = Object.fromEntries((included || []).map((i) => [i.id, i]));
+
+    return (data || []).map((item) => {
+      const attrs = item.attributes || {};
+      const rel = item.relationships || {};
+
+      // Resolve image
+      let imageUrl = null;
+      const imageRelId = rel.field_project_image?.data?.id;
+      const imageIncluded = imageRelId && includedById[imageRelId];
+      if (imageIncluded) {
+        // Possible locations for media/file URL
+        imageUrl =
+          imageIncluded.attributes?.field_media_image?.uri?.url ||
+          imageIncluded.attributes?.uri?.url ||
+          imageIncluded.attributes?.image?.uri?.url ||
+          imageIncluded.attributes?.uri ||
+          null;
+      }
+
+      // Resolve skills
+      const skills = (rel.field_skills?.data || []).map((s) => {
+        const inc = includedById[s.id] || {};
+        return {
+          id: s.id || inc.id || Math.random().toString(36).slice(2, 9),
+          name: inc.attributes?.name || inc.attributes?.title || s.meta?.drupal_internal__target_id || "",
+          logo:
+            inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || null
+        };
+      });
+
+      return {
+        id: item.id || attrs.drupal_internal__nid || Math.random().toString(36).slice(2, 9),
+        title: attrs.title || attrs.field_title || "",
+        content: attrs.field_description || attrs.body || "",
+        url: attrs.field_project_link?.uri || (attrs.field_project_link?.url || null),
+        image: imageUrl,
+        skills
+      };
     });
   };
 

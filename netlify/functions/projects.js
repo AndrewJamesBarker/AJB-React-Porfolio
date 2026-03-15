@@ -13,6 +13,14 @@ function isAllowedUrl(u) {
   }
 }
 
+// Clean skill display name: remove hyphen and anything following it
+function cleanSkillName(name) {
+  if (!name || typeof name !== 'string') return name || '';
+  const trimmed = name.trim();
+  const idx = trimmed.indexOf('-');
+  return idx === -1 ? trimmed : trimmed.slice(0, idx).trim();
+}
+
 // Map Drupal JSON:API response to app project shape
 function mapDrupalResponse(data = [], included = []) {
   const includedById = Object.fromEntries((included || []).map((i) => [i.id, i]));
@@ -72,7 +80,7 @@ function mapDrupalResponse(data = [], included = []) {
 
       return {
         id: s.id || inc.id || Math.random().toString(36).slice(2, 9),
-        name: inc.attributes?.name || inc.attributes?.title || s.meta?.drupal_internal__target_id || "",
+        name: cleanSkillName(inc.attributes?.name || inc.attributes?.title || s.meta?.drupal_internal__target_id || ""),
         logo
       };
     });

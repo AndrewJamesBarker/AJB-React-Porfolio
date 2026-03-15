@@ -16,9 +16,9 @@ function isAllowedUrl(u) {
 // Clean skill display name: remove hyphen and anything following it
 function cleanSkillName(name) {
   if (!name || typeof name !== 'string') return name || '';
-  const trimmed = name.trim();
-  const idx = trimmed.indexOf('-');
-  return idx === -1 ? trimmed : trimmed.slice(0, idx).trim();
+  // split on common hyphen/dash characters and take the first segment
+  const parts = name.trim().split(/[-–—]/);
+  return parts[0].trim();
 }
 
 // Map Drupal JSON:API response to app project shape

@@ -8,7 +8,7 @@ export default function MainBody() {
     const getProjects = async () => {
       try {
         const resp = await fetch(
-          "https://cms.andrewbarker.com/jsonapi/node/projects?include=field_project_image,field_skills,uid",
+          "https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image,field_skills,uid",
           { headers: { Accept: "application/vnd.api+json" } }
         );
         const json = await resp.json();
@@ -133,11 +133,17 @@ export default function MainBody() {
                 <div key={skill.id} className="inline-style">
                   <div>
                     <p id="skill-name" data-title={skill.name}>
-                      <img
-                        className="logo-style"
-                        src={`http://cms.barksbytesdev.com/storage/${skill.logo}`}
-                        alt={skill.name}
-                      />
+                      {skill.logo ? (
+                        <img
+                          className="logo-style"
+                          src={
+                            skill.logo.startsWith && skill.logo.startsWith("http")
+                              ? skill.logo
+                              : `https://cms.andrewjbarker.com${skill.logo.startsWith("/") ? "" : "/"}${skill.logo}`
+                          }
+                          alt={skill.name}
+                        />
+                      ) : null}
                     </p>
                   </div>
                 </div>

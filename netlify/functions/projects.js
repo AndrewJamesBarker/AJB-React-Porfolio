@@ -1,6 +1,6 @@
 // Netlify Function: fetches Drupal JSON:API and returns a transformed project array
 const DRUPAL_API_URL = process.env.DRUPAL_API_URL ||
-  'https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills.field_logo,uid';
+  'https://cms.andrewjbarker.com/jsonapi/node/projects?include=field_project_image.field_media_image,field_skills,uid';
 
 // Map Drupal JSON:API response to app project shape
 function mapDrupalResponse(data = [], included = []) {
@@ -29,12 +29,21 @@ function mapDrupalResponse(data = [], included = []) {
     const skills = (rel.field_skills?.data || []).map((s) => {
       const inc = includedById[s.id] || {};
       let logo = null;
-      const logoMediaId = inc.relationships?.field_logo?.data?.id;
-      const logoFile = logoMediaId && includedById[logoMediaId];
+      // Try a few possible relationship/field names that may hold the media/file
+      const possibleLogoRels = ['field_logo', 'field_skill_icon', 'field_skill_image', 'field_icon'];
+      let logoFile = null;
+      for (const relName of possibleLogoRels) {
+        const logoMediaId = inc.relationships?.[relName]?.data?.id;
+        if (logoMediaId && includedById[logoMediaId]) {
+          logoFile = includedById[logoMediaId];
+          break;
+        }
+      }
       if (logoFile) {
         logo = logoFile.attributes?.uri?.url || logoFile.attributes?.uri?.value || null;
       } else {
-        logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || null;
+        // Fallback to any direct attribute that might contain a URI
+        logo = inc.attributes?.field_logo?.uri?.url || inc.attributes?.logo?.uri?.url || inc.attributes?.field_skill_icon?.uri?.url || null;
       }
 
       return {

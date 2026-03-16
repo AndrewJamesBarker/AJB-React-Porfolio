@@ -37,12 +37,12 @@ export default function MainBody() {
   // Function to reorder projects in a specific custom order
   const reorderProjectsCustom = (projects) => {
     const customOrder = [
+      "Headless Drupal CMS",
       "WisDM",
       "White Witch",
       "Multi-Media",
       "Password Generator",
       "MuseLab",
-      "Portfolio CMS",
       "Castle Seige"
     ];
 

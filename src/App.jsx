@@ -10,6 +10,7 @@ import MainBody from './components/MainBody';
 //import page content
 import Home from "./routes/Home";
 import Education from "./components/EducationList";
+import About from "./routes/About";
 /*
 // Employment page temporarily disabled - keep imports/routes commented for easy restore
 import Employment from "./components/EmploymentList";
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/education" element={<Education />} />
+          <Route path="/about" element={<About />} />
           {/* <Route path="/employment" element={<Employment />} /> */}
         </Routes>
         <Footer />

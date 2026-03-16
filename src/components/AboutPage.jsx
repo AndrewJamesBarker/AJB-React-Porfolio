@@ -23,11 +23,6 @@ export default function AboutPage() {
 							<li>Bachelor’s degree in Jazz Performance (Honours) — Humber College</li>
 							<li>Graduate Certificate in Web Development (Honours) — Humber College</li>
 						</ul>
-
-						<h2>How I Work</h2>
-						<p>
-							I focus on clear communication, pragmatic solutions, and delivering useful, maintainable code. I enjoy mentoring and translating technical requirements into approachable steps.
-						</p>
 					</div>
 				</div>
 			</main>

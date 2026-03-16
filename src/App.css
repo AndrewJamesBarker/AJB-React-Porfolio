@@ -167,9 +167,25 @@ ul {
   margin-right: auto;
 }
 
+#mainAbout h1 {
+  color: #DC2F02;
+}
+
 #mainAbout p {
   text-indent: 21px;
   line-height: 2em;
+}
+
+/* Ensure only body text in About is left-aligned; keep headings' alignment as defined elsewhere */
+#mainAbout .basic-item p,
+#mainAbout .basic-item li {
+  text-align: left;
+}
+
+/* Links inside About paragraphs should be left-aligned and inline */
+#mainAbout .basic-item p a {
+  text-align: left;
+  display: inline;
 }
 
 /* Experience page */

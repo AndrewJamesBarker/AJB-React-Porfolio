@@ -172,14 +172,21 @@ ul {
 }
 
 #mainAbout p {
-  text-indent: 21px;
+  text-indent: 0;
   line-height: 2em;
+  text-align: left;
 }
 
 /* Ensure only body text in About is left-aligned; keep headings' alignment as defined elsewhere */
 #mainAbout .basic-item p,
 #mainAbout .basic-item li {
   text-align: left;
+}
+
+/* Keep titles centered within the About section */
+#mainAbout h1,
+#mainAbout h2 {
+  text-align: center;
 }
 
 /* Links inside About paragraphs should be left-aligned and inline */

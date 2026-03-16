@@ -122,12 +122,10 @@ export default function MainBody() {
           <p>Hello there! I'm</p>
           <h2>Andrew Barker.</h2>
           <p>
-            I’m a Full-Stack Web Developer. My portfolio is growing, and I
-            always look for new things to build and learn.
+            I’m a Full-Stack Developer focused on scalable web applications and CMS platforms, helping people bring their ideas to life on the web, whether that means building applications, launching websites, or organizing data into useful tools.
           </p>
           <p>
-            I love clean, intuitive designs and strive to create seamless
-            interactive experiences.
+            I focus on clear design, intuitive experiences, and creating digital products that are simple, reliable, and effective. I am also AWS Developer certified, with experience building and deploying modern cloud-based applications.
           </p>
         </div>
 

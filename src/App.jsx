@@ -10,7 +10,10 @@ import MainBody from './components/MainBody';
 //import page content
 import Home from "./routes/Home";
 import Education from "./components/EducationList";
+/*
+// Employment page temporarily disabled - keep imports/routes commented for easy restore
 import Employment from "./components/EmploymentList";
+*/
 
 function App() {
   return (
@@ -20,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/education" element={<Education />} />
-          <Route path="/employment" element={<Employment />} />
+          {/* <Route path="/employment" element={<Employment />} /> */}
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow:
+
+# Allow all crawlers. Add Disallow paths below if you want to hide specific folders.
+# Sitemap (uncomment and set correct URL if you publish a sitemap)
+# Sitemap: https://yourdomain.com/sitemap.xml

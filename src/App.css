@@ -189,6 +189,20 @@ ul {
   text-align: center;
 }
 
+/* Center the list directly under the Education heading */
+#mainAbout .basic-item h2 + ul {
+  text-align: center;
+  padding-left: 0;
+  margin-top: 0.5em;
+}
+
+#mainAbout .basic-item h2 + ul li {
+  display: inline-block;
+  margin: 0 0.75em;
+  text-align: left;
+  list-style-position: inside;
+}
+
 /* Links inside About paragraphs should be left-aligned and inline */
 #mainAbout .basic-item p a {
   text-align: left;

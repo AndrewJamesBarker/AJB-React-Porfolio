@@ -100,15 +100,23 @@ function mapDrupalResponse(data = [], included = []) {
 
 export const handler = async (event) => {
   try {
-    const resp = await fetch(DRUPAL_API_URL, {
-      headers: { Accept: 'application/vnd.api+json' },
-      timeout: 10000
-    });
+  const resp = await fetch(DRUPAL_API_URL, {
+    headers: { Accept: 'application/vnd.api+json' },
+    signal: AbortSignal.timeout(10000)
+  });
 
-    if (!resp.ok) {
-      const text = await resp.text();
-      return { statusCode: 502, body: JSON.stringify({ error: 'Bad response from Drupal', status: resp.status, body: text }) };
-    }
+  if (!resp.ok) {
+    const text = await resp.text();
+
+    return {
+      statusCode: 502,
+      body: JSON.stringify({
+        error: 'Bad response from Drupal',
+        status: resp.status,
+        body: text
+      })
+    };
+  }
 
     const json = await resp.json();
     const projects = mapDrupalResponse(json.data || [], json.included || []);
@@ -128,10 +136,18 @@ export const handler = async (event) => {
       body: JSON.stringify(safeProjects)
     };
   } catch (err) {
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Failed to fetch/transform Drupal', details: err.message })
-    };
-  }
+  const isTimeout = err.name === 'TimeoutError';
+
+  return {
+    statusCode: isTimeout ? 504 : 500,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      error: isTimeout
+        ? 'Drupal request timed out'
+        : 'Failed to fetch/transform Drupal',
+      details: err.message
+    })
+  };
+}
+
 };

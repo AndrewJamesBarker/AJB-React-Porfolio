@@ -98,7 +98,7 @@ function mapDrupalResponse(data = [], included = []) {
   return projects;
 }
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   try {
     const resp = await fetch(DRUPAL_API_URL, {
       headers: { Accept: 'application/vnd.api+json' },
